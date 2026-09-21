@@ -24,3 +24,12 @@ enum GlassMenuPosition {
   centerLeft,
   centerRight,
 }
+
+/// Position of the action button (e.g. search button) relative to the menu.
+enum GlassActionPosition {
+  /// Action button is positioned after the menu (right side in LTR).
+  trailing,
+
+  /// Action button is positioned before the menu (left side in LTR).
+  leading,
+}

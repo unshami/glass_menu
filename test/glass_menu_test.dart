@@ -131,9 +131,10 @@ void main() {
     expect(find.byType(SingleChildScrollView), findsOneWidget);
   });
 
-  testWidgets('GlassNavBar positioned factory helper test', (
+  testWidgets('GlassNavBar search visibility and positioning test', (
     WidgetTester tester,
   ) async {
+    // 1. By default, search button IS visible
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -154,8 +155,59 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(GlassNavBar), findsOneWidget);
+    expect(find.byType(SearchGlassButton), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
-    expect(find.text('Feed'), findsOneWidget);
+
+    // 2. When showSearchButton: false, search button is hidden
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Stack(
+            children: [
+              GlassNavBar(
+                currentIndex: 0,
+                showSearchButton: false,
+                onTap: (_) {},
+                items: const [
+                  GlassNavItem(icon: Icons.home, label: 'Home'),
+                  GlassNavItem(icon: Icons.feed, label: 'Feed'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SearchGlassButton), findsNothing);
+
+    // 3. When actionPosition: GlassActionPosition.leading and expandSpaceBetween: true
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Stack(
+            children: [
+              GlassNavBar(
+                currentIndex: 0,
+                showSearchButton: true,
+                actionPosition: GlassActionPosition.leading,
+                expandSpaceBetween: true,
+                actionSpacing: 20.0,
+                onTap: (_) {},
+                items: const [
+                  GlassNavItem(icon: Icons.home, label: 'Home'),
+                  GlassNavItem(icon: Icons.feed, label: 'Feed'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SearchGlassButton), findsOneWidget);
+    expect(find.byType(Spacer), findsOneWidget);
   });
 }

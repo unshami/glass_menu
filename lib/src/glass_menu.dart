@@ -15,6 +15,7 @@ import 'glass_menu_types.dart';
 /// - Rich styling (typography, custom icons, custom widgets, badges, active indicators).
 /// - Position anchors (top, bottom, left, right).
 /// - Detached action buttons (such as the circular search glass button).
+/// - Flexible spacing and separation between the menu and action buttons.
 class GlassMenu extends StatefulWidget {
   /// The list of items displayed in the menu.
   final List<GlassMenuItem> items;
@@ -37,6 +38,15 @@ class GlassMenu extends StatefulWidget {
   /// Optional leading action widget.
   final Widget? leadingAction;
 
+  /// Spacing between the menu capsule and the action buttons.
+  /// Defaults to 12.0.
+  final double actionSpacing;
+
+  /// When true, expands the space between the menu and action buttons to push
+  /// them to opposite sides (e.g. menu left-aligned, search right-aligned, or vice-versa).
+  /// Defaults to false.
+  final bool expandSpaceBetween;
+
   /// Whether the menu is currently expanded (used when [sizeMode] is [GlassMenuSizeMode.expandable]).
   /// If null, [GlassMenu] manages its own expansion state internally.
   final bool? isExpanded;
@@ -47,6 +57,7 @@ class GlassMenu extends StatefulWidget {
   /// Maximum visible width constraint for the menu bar in wrapContent mode.
   final double? maxWidth;
 
+  /// Creates a customizable frosted glass menu.
   const GlassMenu({
     super.key,
     required this.items,
@@ -56,6 +67,8 @@ class GlassMenu extends StatefulWidget {
     this.style = const GlassMenuStyle(),
     this.trailingAction,
     this.leadingAction,
+    this.actionSpacing = 12.0,
+    this.expandSpaceBetween = false,
     this.isExpanded,
     this.onExpandChanged,
     this.maxWidth,
@@ -72,6 +85,8 @@ class GlassMenu extends StatefulWidget {
     GlassMenuStyle style = const GlassMenuStyle(),
     Widget? trailingAction,
     Widget? leadingAction,
+    double actionSpacing = 12.0,
+    bool expandSpaceBetween = false,
     bool? isExpanded,
     ValueChanged<bool>? onExpandChanged,
     EdgeInsets? margin,
@@ -89,6 +104,8 @@ class GlassMenu extends StatefulWidget {
         style: style,
         trailingAction: trailingAction,
         leadingAction: leadingAction,
+        actionSpacing: actionSpacing,
+        expandSpaceBetween: expandSpaceBetween,
         isExpanded: isExpanded,
         onExpandChanged: onExpandChanged,
         maxWidth: maxWidth,
@@ -148,23 +165,31 @@ class _GlassMenuState extends State<GlassMenu>
       menuContent = _buildExpandedMenu(isDark, style);
     }
 
+    final effectiveMainAxisSize =
+        (widget.sizeMode == GlassMenuSizeMode.fullWidth ||
+            widget.expandSpaceBetween)
+        ? MainAxisSize.max
+        : MainAxisSize.min;
+
+    final spacingWidget = widget.expandSpaceBetween
+        ? const Spacer()
+        : SizedBox(width: widget.actionSpacing);
+
     // Outer layout with optional leading and trailing action buttons
     Widget row = Row(
-      mainAxisSize: widget.sizeMode == GlassMenuSizeMode.fullWidth
-          ? MainAxisSize.max
-          : MainAxisSize.min,
+      mainAxisSize: effectiveMainAxisSize,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (widget.leadingAction != null) ...[
           widget.leadingAction!,
-          const SizedBox(width: 10),
+          spacingWidget,
         ],
         if (widget.sizeMode == GlassMenuSizeMode.fullWidth)
           Expanded(child: menuContent)
         else
           Flexible(child: menuContent),
         if (widget.trailingAction != null) ...[
-          const SizedBox(width: 10),
+          spacingWidget,
           widget.trailingAction!,
         ],
       ],

@@ -30,6 +30,12 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   double _iconSize = 24.0;
   double _fontSize = 12.0;
 
+  // Search button & spacing options
+  bool _showSearchButton = true;
+  bool _expandSpaceBetween = false;
+  GlassActionPosition _actionPosition = GlassActionPosition.trailing;
+  double _actionSpacing = 12.0;
+
   final ScrollController _scrollController = ScrollController();
 
   // Full catalog of available menu items
@@ -116,6 +122,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
             itemCount: _itemCount,
             iconSize: _iconSize,
             fontSize: _fontSize,
+            showSearchButton: _showSearchButton,
+            expandSpaceBetween: _expandSpaceBetween,
+            actionPosition: _actionPosition,
+            actionSpacing: _actionSpacing,
             onBlurChanged: (val) {
               setModalState(() => _glassBlur = val);
               setState(() => _glassBlur = val);
@@ -147,6 +157,22 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
             onFontSizeChanged: (val) {
               setModalState(() => _fontSize = val);
               setState(() => _fontSize = val);
+            },
+            onShowSearchChanged: (val) {
+              setModalState(() => _showSearchButton = val);
+              setState(() => _showSearchButton = val);
+            },
+            onExpandSpaceChanged: (val) {
+              setModalState(() => _expandSpaceBetween = val);
+              setState(() => _expandSpaceBetween = val);
+            },
+            onActionPositionChanged: (val) {
+              setModalState(() => _actionPosition = val);
+              setState(() => _actionPosition = val);
+            },
+            onActionSpacingChanged: (val) {
+              setModalState(() => _actionSpacing = val);
+              setState(() => _actionSpacing = val);
             },
           );
         },
@@ -199,6 +225,14 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         fontFamily: 'SF Pro Display',
       ),
     );
+
+    final searchWidget = _showSearchButton
+        ? SearchGlassButton(
+            blur: _glassBlur,
+            opacity: _glassOpacity,
+            onTap: _openSearch,
+          )
+        : null;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -308,13 +342,21 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
             ],
           ),
 
-          // 2. Floating Frosted Glass Menu positioned anywhere on the screen
+          // 2. Floating Frosted Glass Menu with configurable search and alignment
           GlassMenu.positioned(
             position: _position,
             sizeMode: _sizeMode,
             style: glassStyle,
             items: _activeMenuItems,
             currentIndex: _currentTabIndex,
+            actionSpacing: _actionSpacing,
+            expandSpaceBetween: _expandSpaceBetween,
+            leadingAction: _actionPosition == GlassActionPosition.leading
+                ? searchWidget
+                : null,
+            trailingAction: _actionPosition == GlassActionPosition.trailing
+                ? searchWidget
+                : null,
             onItemSelected: (index) {
               setState(() => _currentTabIndex = index);
               if (index == 0) {
@@ -325,66 +367,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                 );
               }
             },
-            trailingAction: _SearchCircleButton(
-              blur: _glassBlur,
-              opacity: _glassOpacity,
-              isDark: isDark,
-              onTap: _openSearch,
-            ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SearchCircleButton extends StatefulWidget {
-  final double blur;
-  final double opacity;
-  final bool isDark;
-  final VoidCallback onTap;
-
-  const _SearchCircleButton({
-    required this.blur,
-    required this.opacity,
-    required this.isDark,
-    required this.onTap,
-  });
-
-  @override
-  State<_SearchCircleButton> createState() => _SearchCircleButtonState();
-}
-
-class _SearchCircleButtonState extends State<_SearchCircleButton> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.onTap,
-      child: AnimatedScale(
-        scale: _isPressed ? 0.92 : 1.0,
-        duration: const Duration(milliseconds: 140),
-        curve: Curves.easeInOut,
-        child: GlassContainer(
-          width: 68,
-          height: 68,
-          shape: BoxShape.circle,
-          blur: widget.blur,
-          opacity: widget.opacity,
-          child: Center(
-            child: Icon(
-              Icons.search_rounded,
-              size: 27,
-              color: widget.isDark
-                  ? Colors.white.withValues(alpha: 0.9)
-                  : const Color(0xFF1E1E1E),
-            ),
-          ),
-        ),
       ),
     );
   }

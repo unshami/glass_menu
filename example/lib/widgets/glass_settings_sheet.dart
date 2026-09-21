@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glass_menu/glass_menu.dart';
 
 /// Modal bottom sheet that lets users adjust glass parameters and test
-/// library modes (wrapContent, expandable, item count, positioning).
+/// library modes (wrapContent, expandable, item count, positioning, search options).
 class GlassSettingsSheet extends StatelessWidget {
   final double blur;
   final double opacity;
@@ -12,6 +12,11 @@ class GlassSettingsSheet extends StatelessWidget {
   final int itemCount;
   final double iconSize;
   final double fontSize;
+  final bool showSearchButton;
+  final bool expandSpaceBetween;
+  final GlassActionPosition actionPosition;
+  final double actionSpacing;
+
   final ValueChanged<double> onBlurChanged;
   final ValueChanged<double> onOpacityChanged;
   final ValueChanged<bool> onThemeModeChanged;
@@ -20,6 +25,10 @@ class GlassSettingsSheet extends StatelessWidget {
   final ValueChanged<int> onItemCountChanged;
   final ValueChanged<double> onIconSizeChanged;
   final ValueChanged<double> onFontSizeChanged;
+  final ValueChanged<bool> onShowSearchChanged;
+  final ValueChanged<bool> onExpandSpaceChanged;
+  final ValueChanged<GlassActionPosition> onActionPositionChanged;
+  final ValueChanged<double> onActionSpacingChanged;
 
   const GlassSettingsSheet({
     super.key,
@@ -31,6 +40,10 @@ class GlassSettingsSheet extends StatelessWidget {
     required this.itemCount,
     required this.iconSize,
     required this.fontSize,
+    required this.showSearchButton,
+    required this.expandSpaceBetween,
+    required this.actionPosition,
+    required this.actionSpacing,
     required this.onBlurChanged,
     required this.onOpacityChanged,
     required this.onThemeModeChanged,
@@ -39,6 +52,10 @@ class GlassSettingsSheet extends StatelessWidget {
     required this.onItemCountChanged,
     required this.onIconSizeChanged,
     required this.onFontSizeChanged,
+    required this.onShowSearchChanged,
+    required this.onExpandSpaceChanged,
+    required this.onActionPositionChanged,
+    required this.onActionSpacingChanged,
   });
 
   @override
@@ -112,12 +129,81 @@ class GlassSettingsSheet extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // 2. Menu Item Count (2 items vs 5 items vs 9 items)
+              // 2. Search Button & Alignment (User's new options!)
+              const Text(
+                '2. Search Button & Alignment Options',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              const SizedBox(height: 6),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Show Search Button (Optional)'),
+                subtitle: const Text('Search button visible by default'),
+                value: showSearchButton,
+                activeThumbColor: const Color(0xFFC41200),
+                onChanged: onShowSearchChanged,
+              ),
+              if (showSearchButton) ...[
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Expand Space Between (Opposite Edges)'),
+                  subtitle: const Text(
+                    'Menu on one side, search button on the other side',
+                  ),
+                  value: expandSpaceBetween,
+                  activeThumbColor: const Color(0xFFC41200),
+                  onChanged: onExpandSpaceChanged,
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    const Text('Search Position: '),
+                    const SizedBox(width: 8),
+                    ChoiceChip(
+                      label: const Text('Trailing (Right)'),
+                      selected: actionPosition == GlassActionPosition.trailing,
+                      onSelected: (_) =>
+                          onActionPositionChanged(GlassActionPosition.trailing),
+                    ),
+                    const SizedBox(width: 8),
+                    ChoiceChip(
+                      label: const Text('Leading (Left / Vice-versa)'),
+                      selected: actionPosition == GlassActionPosition.leading,
+                      onSelected: (_) =>
+                          onActionPositionChanged(GlassActionPosition.leading),
+                    ),
+                  ],
+                ),
+                if (!expandSpaceBetween) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Space Between Menu & Search:'),
+                      Text(
+                        '${actionSpacing.toInt()}px',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Slider(
+                    value: actionSpacing,
+                    min: 4.0,
+                    max: 48.0,
+                    divisions: 22,
+                    activeColor: const Color(0xFFC41200),
+                    onChanged: onActionSpacingChanged,
+                  ),
+                ],
+              ],
+              const SizedBox(height: 16),
+
+              // 3. Menu Item Count (2 items vs 5 items vs 9 items)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    '2. Item Count (Horizontal Scroll Test)',
+                    '3. Item Count (Horizontal Scroll Test)',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   Text(
@@ -152,9 +238,9 @@ class GlassSettingsSheet extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // 3. Screen Position
+              // 4. Screen Position
               const Text(
-                '3. Screen Position Anchor',
+                '4. Screen Position Anchor',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               const SizedBox(height: 6),
@@ -202,9 +288,9 @@ class GlassSettingsSheet extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // 4. Typography & Icon Size
+              // 5. Typography & Icon Size
               const Text(
-                '4. Icon & Font Customization',
+                '5. Icon & Font Customization',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               const SizedBox(height: 6),
@@ -246,9 +332,9 @@ class GlassSettingsSheet extends StatelessWidget {
               ),
               const SizedBox(height: 10),
 
-              // 5. Blur & Opacity Sliders
+              // 6. Blur & Opacity Sliders
               const Text(
-                '5. Glass Material Properties',
+                '6. Glass Material Properties',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               const SizedBox(height: 6),

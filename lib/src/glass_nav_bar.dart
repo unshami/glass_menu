@@ -54,6 +54,26 @@ class GlassNavBar extends StatelessWidget {
   /// Optional callback when the detached circular search button is tapped.
   final VoidCallback? onSearchTap;
 
+  /// Whether the search button is visible. Defaults to true.
+  final bool showSearchButton;
+
+  /// Spacing between the menu capsule and the search button.
+  /// Defaults to 12.0.
+  final double actionSpacing;
+
+  /// When true, expands the space between the menu and the search button to push
+  /// them to opposite edges (e.g., menu left-aligned and search right-aligned, or vice-versa).
+  /// Defaults to false.
+  final bool expandSpaceBetween;
+
+  /// Position of the search button relative to the menu:
+  /// [GlassActionPosition.trailing] (default, search on right) or
+  /// [GlassActionPosition.leading] (search on left, vice-versa).
+  final GlassActionPosition actionPosition;
+
+  /// Optional custom search button widget to replace the default circular button.
+  final Widget? customSearchButton;
+
   /// List of items to display.
   final List<GlassNavItem> items;
 
@@ -84,6 +104,11 @@ class GlassNavBar extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
     this.onSearchTap,
+    this.showSearchButton = true,
+    this.actionSpacing = 12.0,
+    this.expandSpaceBetween = false,
+    this.actionPosition = GlassActionPosition.trailing,
+    this.customSearchButton,
     required this.items,
     this.blur = 24.0,
     this.opacity = 0.52,
@@ -101,6 +126,17 @@ class GlassNavBar extends StatelessWidget {
       opacity: opacity,
     );
 
+    Widget? searchWidget;
+    if (showSearchButton) {
+      searchWidget =
+          customSearchButton ??
+          SearchGlassButton(
+            blur: blur,
+            opacity: opacity,
+            onTap: onSearchTap ?? () {},
+          );
+    }
+
     return GlassMenu.positioned(
       position: position,
       sizeMode: sizeMode,
@@ -110,8 +146,13 @@ class GlassNavBar extends StatelessWidget {
       isExpanded: isExpanded,
       onExpandChanged: onExpandChanged,
       items: items.map((e) => e.toMenuItem()).toList(),
-      trailingAction: onSearchTap != null
-          ? SearchGlassButton(blur: blur, opacity: opacity, onTap: onSearchTap!)
+      actionSpacing: actionSpacing,
+      expandSpaceBetween: expandSpaceBetween,
+      leadingAction: actionPosition == GlassActionPosition.leading
+          ? searchWidget
+          : null,
+      trailingAction: actionPosition == GlassActionPosition.trailing
+          ? searchWidget
           : null,
     );
   }
