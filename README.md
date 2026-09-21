@@ -7,6 +7,10 @@ A customizable, lightweight frosted glass (liquid glassmorphism) navigation bar 
 
 Designed to look and feel like modern iOS liquid glass navigation bars.
 
+<p align="center">
+  <img src="screenshots/glass_menu_desktop.png" alt="Glass Menu Desktop Preview" width="750"/>
+</p>
+
 ---
 
 ## ✨ Features
@@ -24,7 +28,7 @@ Designed to look and feel like modern iOS liquid glass navigation bars.
   - Configurable blur intensity (sigma), glass surface opacity, borders, and drop shadows.
 - 📍 **Arbitrary Positioning (`GlassMenuPosition`)**:
   - `bottomCenter`, `bottomLeft`, `bottomRight`, `topCenter`, `topLeft`, `topRight`, `centerLeft`, `centerRight`.
-- 🔍 **Detached Circular Glass Buttons**: Pre-built `SearchGlassButton` with haptic feedback and spring scale animations.
+- 🔍 **Detached Circular Glass Buttons**: Pre-built `SearchGlassButton` with optional visibility (`showSearchButton`), configurable spacing (`actionSpacing`), and opposite-edge alignment (`expandSpaceBetween`).
 - 🚀 **Zero Dependencies**: Lightweight and future-proof across iOS, Android, macOS, Web, Windows, and Linux.
 
 ---
@@ -35,8 +39,9 @@ Add `glass_menu` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  glass_menu: ^1.0.0
+  glass_menu: ^1.0.1
 ```
+
 
 Or run:
 
@@ -151,7 +156,7 @@ GlassMenu.positioned(
 
 ## 📱 Example App
 
-A full sample news application demonstrating all sizing modes, scrolling, and positioning is included in the [`example/`](https://github.com/muhammadumernaeem/glass_menu/tree/main/example) directory.
+A full sample news application demonstrating all sizing modes, scrolling, and positioning is included in the [`example/`](https://github.com/unshami/glass_menu/tree/main/example) directory.
 
 To run the example:
 
