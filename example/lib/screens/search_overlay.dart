@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/glass_container.dart';
+import 'package:glass_menu/glass_menu.dart';
 
 /// Fullscreen search overlay featuring a floating glass search input and trending tags.
 class SearchOverlay extends StatelessWidget {

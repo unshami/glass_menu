@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../glass_menu/glass_menu.dart';
+import 'package:glass_menu/glass_menu.dart';
 import '../models/news_article.dart';
 import '../widgets/glass_settings_sheet.dart';
 import '../widgets/news_card.dart';

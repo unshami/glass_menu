@@ -2,23 +2,51 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 /// A reusable widget that renders a frosted glass / liquid glass effect
-/// using [BackdropFilter], specular gradient borders, and ambient drop shadows.
+/// using native [BackdropFilter], specular gradient borders, and ambient drop shadows.
 class GlassContainer extends StatelessWidget {
+  /// The child widget placed inside the glass surface.
   final Widget child;
+
+  /// Optional fixed width.
   final double? width;
+
+  /// Optional fixed height.
   final double? height;
+
+  /// Internal padding for the child.
   final EdgeInsetsGeometry? padding;
+
+  /// Margin surrounding the outer shadow.
   final EdgeInsetsGeometry? margin;
+
+  /// Border radius of the glass rectangle. Ignored if [shape] is [BoxShape.circle].
   final BorderRadius? borderRadius;
+
+  /// Shape of the glass container (rectangle or circle).
   final BoxShape shape;
+
+  /// Backdrop blur sigma intensity.
   final double blur;
+
+  /// Surface fill opacity between 0.0 and 1.0.
   final double opacity;
+
+  /// Optional tint color. When null, adapts to light and dark themes automatically.
   final Color? tintColor;
+
+  /// Specular rim highlight border color.
   final Color? borderColor;
+
+  /// Specular rim highlight border width.
   final double borderWidth;
+
+  /// Custom list of elevation shadows.
   final List<BoxShadow>? customShadows;
+
+  /// Optional tap callback.
   final VoidCallback? onTap;
 
+  /// Creates a frosted glass container with real-time backdrop blur.
   const GlassContainer({
     super.key,
     required this.child,
@@ -41,14 +69,12 @@ class GlassContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Base translucent tints for glass surface
     final defaultTint =
         tintColor ??
         (isDark
             ? Colors.black.withValues(alpha: opacity * 0.9)
             : Colors.white.withValues(alpha: opacity));
 
-    // Specular border highlights
     final effectiveBorderColor =
         borderColor ??
         (isDark
@@ -59,7 +85,6 @@ class GlassContainer extends StatelessWidget {
         ? null
         : (borderRadius ?? BorderRadius.circular(32));
 
-    // Ambient drop shadows that give the floating elevation
     final effectiveShadows =
         customShadows ??
         [
@@ -100,7 +125,6 @@ class GlassContainer extends StatelessWidget {
       child: child,
     );
 
-    // Apply BackdropFilter with precise clipping
     Widget glass;
     if (shape == BoxShape.circle) {
       glass = ClipOval(
@@ -119,7 +143,6 @@ class GlassContainer extends StatelessWidget {
       );
     }
 
-    // Outer container holding shadow (shadow sits outside the clipped backdrop)
     Widget result = Container(
       margin: margin,
       decoration: BoxDecoration(

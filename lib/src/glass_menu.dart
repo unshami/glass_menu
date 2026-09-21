@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../widgets/glass_container.dart';
+import 'glass_container.dart';
 import 'glass_menu_item.dart';
 import 'glass_menu_style.dart';
 import 'glass_menu_types.dart';

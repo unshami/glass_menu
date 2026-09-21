@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../glass_menu/glass_menu.dart';
+import 'glass_menu.dart';
+import 'glass_menu_item.dart';
+import 'glass_menu_style.dart';
+import 'glass_menu_types.dart';
+import 'search_glass_button.dart';
 
-/// Backward-compatible model matching [GlassNavItem] to [GlassMenuItem].
+/// Navigation item model for [GlassNavBar].
 class GlassNavItem {
+  /// Icon displayed when inactive.
   final IconData icon;
+
+  /// Optional icon displayed when selected.
   final IconData? activeIcon;
+
+  /// Text label.
   final String label;
+
+  /// Active color override.
   final Color? activeColor;
+
+  /// Inactive color override.
   final Color? inactiveColor;
 
+  /// Creates a navigation item for [GlassNavBar].
   const GlassNavItem({
     required this.icon,
     this.activeIcon,
@@ -18,6 +31,7 @@ class GlassNavItem {
     this.inactiveColor,
   });
 
+  /// Converts this [GlassNavItem] to a [GlassMenuItem].
   GlassMenuItem toMenuItem() {
     return GlassMenuItem(
       icon: icon,
@@ -29,20 +43,42 @@ class GlassNavItem {
   }
 }
 
-/// Floating Frosted Glass Navigation Bar built on top of [GlassMenu].
+/// A ready-to-use Floating Frosted Glass Navigation Bar built on top of [GlassMenu].
 class GlassNavBar extends StatelessWidget {
+  /// Index of the currently selected tab.
   final int currentIndex;
+
+  /// Callback when a tab is tapped.
   final ValueChanged<int> onTap;
+
+  /// Optional callback when the detached circular search button is tapped.
   final VoidCallback? onSearchTap;
+
+  /// List of items to display.
   final List<GlassNavItem> items;
+
+  /// Frosted glass background blur intensity (sigma).
   final double blur;
+
+  /// Frosted glass surface opacity (0.0 to 1.0).
   final double opacity;
+
+  /// Sizing behavior mode.
   final GlassMenuSizeMode sizeMode;
+
+  /// Screen position anchor.
   final GlassMenuPosition position;
+
+  /// Whether the menu is currently expanded (used in expandable mode).
   final bool? isExpanded;
+
+  /// Callback when expanded state toggles.
   final ValueChanged<bool>? onExpandChanged;
+
+  /// Custom style overrides.
   final GlassMenuStyle? customStyle;
 
+  /// Creates a floating frosted glass navigation bar.
   const GlassNavBar({
     super.key,
     required this.currentIndex,
@@ -77,67 +113,6 @@ class GlassNavBar extends StatelessWidget {
       trailingAction: onSearchTap != null
           ? SearchGlassButton(blur: blur, opacity: opacity, onTap: onSearchTap!)
           : null,
-    );
-  }
-}
-
-/// Standalone detached frosted glass circular button (e.g. for search).
-class SearchGlassButton extends StatefulWidget {
-  final double blur;
-  final double opacity;
-  final VoidCallback onTap;
-  final IconData icon;
-  final double size;
-
-  const SearchGlassButton({
-    super.key,
-    this.blur = 24.0,
-    this.opacity = 0.52,
-    required this.onTap,
-    this.icon = Icons.search_rounded,
-    this.size = 68.0,
-  });
-
-  @override
-  State<SearchGlassButton> createState() => _SearchGlassButtonState();
-}
-
-class _SearchGlassButtonState extends State<SearchGlassButton> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: () {
-        HapticFeedback.lightImpact();
-        widget.onTap();
-      },
-      child: AnimatedScale(
-        scale: _isPressed ? 0.92 : 1.0,
-        duration: const Duration(milliseconds: 140),
-        curve: Curves.easeInOut,
-        child: GlassContainer(
-          width: widget.size,
-          height: widget.size,
-          shape: BoxShape.circle,
-          blur: widget.blur,
-          opacity: widget.opacity,
-          child: Center(
-            child: Icon(
-              widget.icon,
-              size: widget.size * 0.4,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.9)
-                  : const Color(0xFF1E1E1E),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

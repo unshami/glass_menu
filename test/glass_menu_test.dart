@@ -1,49 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:glass_menu/glass_menu/glass_menu.dart';
-import 'package:glass_menu/main.dart';
+import 'package:glass_menu/glass_menu.dart';
 
 void main() {
-  testWidgets('GlassMenu wrapContent and navigation smoke test', (
+  testWidgets('GlassMenu wrapContent mode renders items properly', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const GlassMenuApp());
+    int selectedIndex = 1;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return GlassMenu(
+                sizeMode: GlassMenuSizeMode.wrapContent,
+                currentIndex: selectedIndex,
+                onItemSelected: (idx) => setState(() => selectedIndex = idx),
+                items: const [
+                  GlassMenuItem(icon: Icons.home, label: 'Home'),
+                  GlassMenuItem(icon: Icons.article, label: 'My News'),
+                ],
+                trailingAction: SearchGlassButton(onTap: () {}),
+              );
+            },
+          ),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // Verify GlassMenu is rendered
     expect(find.byType(GlassMenu), findsOneWidget);
 
-    // Verify tabs are present inside the nav bar
-    expect(
-      find.descendant(of: find.byType(GlassMenu), matching: find.text('Home')),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: find.byType(GlassMenu),
-        matching: find.text('My News'),
-      ),
-      findsOneWidget,
-    );
+    // Verify items are present
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('My News'), findsOneWidget);
 
-    // Verify search icon is present
-    expect(find.byIcon(Icons.search_rounded), findsOneWidget);
+    // Verify trailing search button
+    expect(find.byType(SearchGlassButton), findsOneWidget);
 
-    // Tap Home tab
+    // Tap Home
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
-
-    // Verify search button tap opens search overlay
-    await tester.tap(find.byIcon(Icons.search_rounded));
-    await tester.pumpAndSettle();
-    expect(find.text('TRENDING SEARCHES'), findsOneWidget);
-
-    // Close search overlay
-    await tester.tap(find.text('Cancel'));
-    await tester.pumpAndSettle();
+    expect(selectedIndex, 0);
   });
 
-  testWidgets('GlassMenu expandable mode test', (WidgetTester tester) async {
+  testWidgets('GlassMenu expandable mode toggles correctly', (
+    WidgetTester tester,
+  ) async {
     int selectedIndex = 0;
     bool expanded = false;
 
@@ -116,7 +121,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Verify first items are present and scroll view exists
     expect(find.text('Item 0'), findsOneWidget);
     expect(find.byType(SingleChildScrollView), findsOneWidget);
 
@@ -124,7 +128,34 @@ void main() {
     await tester.drag(find.text('Item 0'), const Offset(-200, 0));
     await tester.pumpAndSettle();
 
-    // Later item should be visible
     expect(find.byType(SingleChildScrollView), findsOneWidget);
+  });
+
+  testWidgets('GlassNavBar positioned factory helper test', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Stack(
+            children: [
+              GlassNavBar(
+                currentIndex: 0,
+                onTap: (_) {},
+                items: const [
+                  GlassNavItem(icon: Icons.home, label: 'Home'),
+                  GlassNavItem(icon: Icons.feed, label: 'Feed'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(GlassNavBar), findsOneWidget);
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Feed'), findsOneWidget);
   });
 }

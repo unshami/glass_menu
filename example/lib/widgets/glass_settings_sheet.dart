@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../glass_menu/glass_menu.dart';
+import 'package:glass_menu/glass_menu.dart';
 
 /// Modal bottom sheet that lets users adjust glass parameters and test
 /// library modes (wrapContent, expandable, item count, positioning).
