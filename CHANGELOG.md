@@ -1,3 +1,8 @@
+## 1.0.2
+
+* Featured mobile preview screenshot as the primary preview in pubspec and search cards.
+* Displayed both mobile and desktop previews side-by-side in README documentation.
+
 ## 1.0.1
 
 * Added `showSearchButton` to make the search action optional (defaults to `true`).

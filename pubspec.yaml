@@ -1,6 +1,6 @@
 name: glass_menu
 description: "A customizable frosted glass (liquid glassmorphism) navigation bar for Flutter supporting wrap content, expandable animations, and custom positioning."
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/unshami/glass_menu
 repository: https://github.com/unshami/glass_menu
 issue_tracker: https://github.com/unshami/glass_menu/issues
@@ -12,10 +12,10 @@ topics:
   - ui
 
 screenshots:
-  - description: 'Frosted liquid glass navigation bar in Flutter with wrapContent, animations, and custom search button.'
-    path: screenshots/glass_menu_desktop.png
   - description: 'Mobile view of the liquid glass menu capsule and floating search button.'
     path: screenshots/glass_menu_mobile.png
+  - description: 'Desktop view of the frosted liquid glass navigation bar in Flutter with wrapContent and animations.'
+    path: screenshots/glass_menu_desktop.png
 
 environment:
   sdk: ^3.11.4
