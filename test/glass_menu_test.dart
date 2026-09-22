@@ -307,4 +307,34 @@ void main() {
       expect(glassContainer.borderWidth, 2.0);
     },
   );
+
+  testWidgets(
+    'GlassMenu does not overflow even with large iconSize and fontSize at default height',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: GlassMenu(
+              currentIndex: 0,
+              onItemSelected: (_) {},
+              style: const GlassMenuStyle(
+                height: 68.0,
+                iconSize: 32.0,
+                textStyle: TextStyle(fontSize: 18.0),
+                activeTextStyle: TextStyle(fontSize: 18.0),
+              ),
+              items: const [
+                GlassMenuItem(icon: Icons.home, label: 'Home'),
+                GlassMenuItem(icon: Icons.article, label: 'News'),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.byType(GlassMenu), findsOneWidget);
+    },
+  );
 }

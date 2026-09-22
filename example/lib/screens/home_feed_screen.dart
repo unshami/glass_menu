@@ -27,6 +27,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   GlassMenuSizeMode _sizeMode = GlassMenuSizeMode.wrapContent;
   GlassMenuPosition _position = GlassMenuPosition.bottomCenter;
   int _itemCount = 2; // Default to 2 items (Home & My News)
+  double _barHeight = 68.0;
   double _iconSize = 24.0;
   double _fontSize = 12.0;
 
@@ -120,12 +121,17 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
             sizeMode: _sizeMode,
             position: _position,
             itemCount: _itemCount,
+            barHeight: _barHeight,
             iconSize: _iconSize,
             fontSize: _fontSize,
             showSearchButton: _showSearchButton,
             expandSpaceBetween: _expandSpaceBetween,
             actionPosition: _actionPosition,
             actionSpacing: _actionSpacing,
+            onBarHeightChanged: (val) {
+              setModalState(() => _barHeight = val);
+              setState(() => _barHeight = val);
+            },
             onBlurChanged: (val) {
               setModalState(() => _glassBlur = val);
               setState(() => _glassBlur = val);
@@ -210,7 +216,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       blur: _glassBlur,
       opacity: _glassOpacity,
       iconSize: _iconSize,
-      height: 68.0,
+      height: _barHeight,
       activeColor: const Color(0xFFC41200),
       textStyle: TextStyle(
         fontSize: _fontSize,
@@ -228,6 +234,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
     final searchWidget = _showSearchButton
         ? SearchGlassButton(
+            size: _barHeight,
             blur: _glassBlur,
             opacity: _glassOpacity,
             onTap: _openSearch,

@@ -10,6 +10,7 @@ class GlassSettingsSheet extends StatelessWidget {
   final GlassMenuSizeMode sizeMode;
   final GlassMenuPosition position;
   final int itemCount;
+  final double barHeight;
   final double iconSize;
   final double fontSize;
   final bool showSearchButton;
@@ -17,6 +18,7 @@ class GlassSettingsSheet extends StatelessWidget {
   final GlassActionPosition actionPosition;
   final double actionSpacing;
 
+  final ValueChanged<double> onBarHeightChanged;
   final ValueChanged<double> onBlurChanged;
   final ValueChanged<double> onOpacityChanged;
   final ValueChanged<bool> onThemeModeChanged;
@@ -38,12 +40,14 @@ class GlassSettingsSheet extends StatelessWidget {
     required this.sizeMode,
     required this.position,
     required this.itemCount,
+    required this.barHeight,
     required this.iconSize,
     required this.fontSize,
     required this.showSearchButton,
     required this.expandSpaceBetween,
     required this.actionPosition,
     required this.actionSpacing,
+    required this.onBarHeightChanged,
     required this.onBlurChanged,
     required this.onOpacityChanged,
     required this.onThemeModeChanged,
@@ -291,8 +295,27 @@ class GlassSettingsSheet extends StatelessWidget {
 
               // 5. Typography & Icon Size
               const Text(
-                '5. Icon & Font Customization',
+                '5. Bar Height, Icon & Font Customization',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Nav Bar Height:'),
+                  Text(
+                    '${barHeight.toInt()}px',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Slider(
+                value: barHeight,
+                min: 52.0,
+                max: 86.0,
+                divisions: 17,
+                activeColor: const Color(0xFFC41200),
+                onChanged: onBarHeightChanged,
               ),
               const SizedBox(height: 6),
               Row(

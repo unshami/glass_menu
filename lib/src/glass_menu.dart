@@ -456,19 +456,25 @@ class _GlassMenuItemWidget extends StatelessWidget {
         color: isSelected ? activeIndicatorBg : Colors.transparent,
         borderRadius: borderRadius,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) =>
-                ScaleTransition(scale: animation, child: child),
-            child: iconWidget,
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) =>
+                    ScaleTransition(scale: animation, child: child),
+                child: iconWidget,
+              ),
+              const SizedBox(height: 3),
+              labelWidget,
+            ],
           ),
-          const SizedBox(height: 3),
-          labelWidget,
-        ],
+        ),
       ),
     );
 
