@@ -1,3 +1,16 @@
+## 1.1.0
+
+* **Dynamic Width Sizing with `expandSpaceBetween`**:
+  * Menu capsule now dynamically hugs 2 items on one side, smoothly expands to accommodate 3–5 items, and caps at available screen width for 9+ items with horizontal scrolling.
+  * Replaced rigid `Spacer` with `MainAxisAlignment.spaceBetween` for responsive flex distribution.
+* **Search Button Customization**:
+  * Added `borderColor`, `borderWidth`, and `iconColor` customization parameters to `SearchGlassButton`.
+  * `GlassNavBar` now automatically synchronizes border color, border width, inactive icon color, and circular button diameter (`height`) with the menu styling.
+* **Anti-Overflow Safeguards**:
+  * Added `FittedBox` scale-down safeguard on menu items to prevent vertical `RenderFlex` overflow errors when using large icon and font sizes.
+* **Documentation & Gallery**:
+  * Added high-resolution mobile dark mode screenshot preview.
+
 ## 1.0.2
 
 * Featured mobile preview screenshot as the primary preview in pubspec and search cards.

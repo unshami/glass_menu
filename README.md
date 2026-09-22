@@ -8,9 +8,11 @@ A customizable, lightweight frosted glass (liquid glassmorphism) navigation bar 
 Designed to look and feel like modern iOS liquid glass navigation bars.
 
 <p align="center">
-  <img src="screenshots/glass_menu_mobile.png" alt="Glass Menu Mobile Preview" width="280"/>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="screenshots/glass_menu_desktop.png" alt="Glass Menu Desktop Preview" width="480"/>
+  <img src="screenshots/glass_menu_mobile.png" alt="Glass Menu Mobile Preview (Light)" width="250"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/glass_menu_dark.png" alt="Glass Menu Mobile Preview (Dark)" width="250"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/glass_menu_desktop.png" alt="Glass Menu Desktop Preview" width="450"/>
 </p>
 
 ---
@@ -41,7 +43,7 @@ Add `glass_menu` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  glass_menu: ^1.0.2
+  glass_menu: ^1.1.0
 ```
 
 
