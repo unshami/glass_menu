@@ -133,6 +133,9 @@ class GlassNavBar extends StatelessWidget {
           SearchGlassButton(
             blur: blur,
             opacity: opacity,
+            borderColor: effectiveStyle.borderColor,
+            borderWidth: effectiveStyle.borderWidth,
+            iconColor: effectiveStyle.inactiveColor,
             onTap: onSearchTap ?? () {},
           );
     }

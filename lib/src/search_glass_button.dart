@@ -19,6 +19,15 @@ class SearchGlassButton extends StatefulWidget {
   /// Diameter size of the circular button.
   final double size;
 
+  /// Specular rim highlight border color. When null, defaults to adaptive glass highlight.
+  final Color? borderColor;
+
+  /// Specular rim highlight border width.
+  final double borderWidth;
+
+  /// Icon color override. When null, adapts automatically to light/dark themes.
+  final Color? iconColor;
+
   /// Creates a detached circular frosted glass action button.
   const SearchGlassButton({
     super.key,
@@ -27,6 +36,9 @@ class SearchGlassButton extends StatefulWidget {
     required this.onTap,
     this.icon = Icons.search_rounded,
     this.size = 68.0,
+    this.borderColor,
+    this.borderWidth = 1.0,
+    this.iconColor,
   });
 
   @override
@@ -58,13 +70,16 @@ class _SearchGlassButtonState extends State<SearchGlassButton> {
           shape: BoxShape.circle,
           blur: widget.blur,
           opacity: widget.opacity,
+          borderColor: widget.borderColor,
+          borderWidth: widget.borderWidth,
           child: Center(
             child: Icon(
               widget.icon,
               size: widget.size * 0.4,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.9)
-                  : const Color(0xFF1E1E1E),
+              color: widget.iconColor ??
+                  (isDark
+                      ? Colors.white.withValues(alpha: 0.9)
+                      : const Color(0xFF1E1E1E)),
             ),
           ),
         ),

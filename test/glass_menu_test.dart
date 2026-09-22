@@ -275,4 +275,36 @@ void main() {
     // And it must not exceed available space (400 - 50 - 12 = 338)
     expect(size5Items.width, lessThanOrEqualTo(338.0));
   });
+
+  testWidgets(
+    'SearchGlassButton accepts custom borderColor, borderWidth, and iconColor',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SearchGlassButton(
+              borderColor: Colors.red,
+              borderWidth: 2.0,
+              iconColor: Colors.amber,
+              onTap: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final iconFinder = find.byIcon(Icons.search_rounded);
+      expect(iconFinder, findsOneWidget);
+      final iconWidget = tester.widget<Icon>(iconFinder);
+      expect(iconWidget.color, Colors.amber);
+
+      final glassContainerFinder = find.byType(GlassContainer);
+      expect(glassContainerFinder, findsOneWidget);
+      final glassContainer = tester.widget<GlassContainer>(
+        glassContainerFinder,
+      );
+      expect(glassContainer.borderColor, Colors.red);
+      expect(glassContainer.borderWidth, 2.0);
+    },
+  );
 }
