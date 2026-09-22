@@ -208,6 +208,71 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SearchGlassButton), findsOneWidget);
-    expect(find.byType(Spacer), findsOneWidget);
+    // Search is leading (on left), so its dx position should be less than the menu's dx position
+    final searchPos = tester.getTopLeft(find.byType(SearchGlassButton));
+    final menuPos = tester.getTopLeft(find.byType(SingleChildScrollView));
+    expect(searchPos.dx, lessThan(menuPos.dx));
+  });
+
+  testWidgets('GlassMenu expands width dynamically when expandSpaceBetween is true', (
+    WidgetTester tester,
+  ) async {
+    // 1. With 2 items, measure menu container width
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 400,
+            child: GlassMenu(
+              sizeMode: GlassMenuSizeMode.wrapContent,
+              expandSpaceBetween: true,
+              currentIndex: 0,
+              onItemSelected: (_) {},
+              items: const [
+                GlassMenuItem(icon: Icons.home, label: 'Home'),
+                GlassMenuItem(icon: Icons.article, label: 'My News'),
+              ],
+              trailingAction: const SizedBox(width: 50, height: 50),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final size2Items = tester.getSize(find.byType(GlassContainer));
+
+    // 2. With 5 items, menu should dynamically expand to fit the additional items
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 400,
+            child: GlassMenu(
+              sizeMode: GlassMenuSizeMode.wrapContent,
+              expandSpaceBetween: true,
+              currentIndex: 0,
+              onItemSelected: (_) {},
+              items: const [
+                GlassMenuItem(icon: Icons.home, label: 'Home'),
+                GlassMenuItem(icon: Icons.article, label: 'My News'),
+                GlassMenuItem(icon: Icons.live_tv, label: 'Live'),
+                GlassMenuItem(icon: Icons.video_collection, label: 'Videos'),
+                GlassMenuItem(icon: Icons.bookmark, label: 'Saved'),
+              ],
+              trailingAction: const SizedBox(width: 50, height: 50),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final size5Items = tester.getSize(find.byType(GlassContainer));
+
+    // Menu with 5 items must be strictly wider than with 2 items
+    expect(size5Items.width, greaterThan(size2Items.width));
+    // And it must not exceed available space (400 - 50 - 12 = 338)
+    expect(size5Items.width, lessThanOrEqualTo(338.0));
   });
 }

@@ -165,34 +165,61 @@ class _GlassMenuState extends State<GlassMenu>
       menuContent = _buildExpandedMenu(isDark, style);
     }
 
-    final effectiveMainAxisSize =
-        (widget.sizeMode == GlassMenuSizeMode.fullWidth ||
-            widget.expandSpaceBetween)
-        ? MainAxisSize.max
-        : MainAxisSize.min;
+    final hasActions =
+        widget.leadingAction != null || widget.trailingAction != null;
+    final effectiveExpandSpace = widget.expandSpaceBetween && hasActions;
 
-    final spacingWidget = widget.expandSpaceBetween
-        ? const Spacer()
-        : SizedBox(width: widget.actionSpacing);
+    final effectiveMainAxisSize =
+        (widget.sizeMode == GlassMenuSizeMode.fullWidth || effectiveExpandSpace)
+            ? MainAxisSize.max
+            : MainAxisSize.min;
+
+    final mainAxisAlignment = effectiveExpandSpace
+        ? MainAxisAlignment.spaceBetween
+        : MainAxisAlignment.start;
+
+    final List<Widget> rowChildren = [];
+
+    if (widget.leadingAction != null) {
+      if (effectiveExpandSpace) {
+        rowChildren.add(
+          Padding(
+            padding: EdgeInsets.only(right: widget.actionSpacing),
+            child: widget.leadingAction!,
+          ),
+        );
+      } else {
+        rowChildren.add(widget.leadingAction!);
+        rowChildren.add(SizedBox(width: widget.actionSpacing));
+      }
+    }
+
+    if (widget.sizeMode == GlassMenuSizeMode.fullWidth) {
+      rowChildren.add(Expanded(child: menuContent));
+    } else {
+      rowChildren.add(Flexible(child: menuContent));
+    }
+
+    if (widget.trailingAction != null) {
+      if (effectiveExpandSpace) {
+        rowChildren.add(
+          Padding(
+            padding: EdgeInsets.only(left: widget.actionSpacing),
+            child: widget.trailingAction!,
+          ),
+        );
+      } else {
+        rowChildren.add(SizedBox(width: widget.actionSpacing));
+        rowChildren.add(widget.trailingAction!);
+      }
+    }
 
     // Outer layout with optional leading and trailing action buttons
     Widget row = Row(
       mainAxisSize: effectiveMainAxisSize,
+      mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (widget.leadingAction != null) ...[
-          widget.leadingAction!,
-          spacingWidget,
-        ],
-        if (widget.sizeMode == GlassMenuSizeMode.fullWidth)
-          Expanded(child: menuContent)
-        else
-          Flexible(child: menuContent),
-        if (widget.trailingAction != null) ...[
-          spacingWidget,
-          widget.trailingAction!,
-        ],
-      ],
+      children: rowChildren,
     );
 
     if (widget.maxWidth != null) {

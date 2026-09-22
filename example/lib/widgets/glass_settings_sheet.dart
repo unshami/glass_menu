@@ -155,19 +155,20 @@ class GlassSettingsSheet extends StatelessWidget {
                   onChanged: onExpandSpaceChanged,
                 ),
                 const SizedBox(height: 6),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     const Text('Search Position: '),
-                    const SizedBox(width: 8),
                     ChoiceChip(
                       label: const Text('Trailing (Right)'),
                       selected: actionPosition == GlassActionPosition.trailing,
                       onSelected: (_) =>
                           onActionPositionChanged(GlassActionPosition.trailing),
                     ),
-                    const SizedBox(width: 8),
                     ChoiceChip(
-                      label: const Text('Leading (Left / Vice-versa)'),
+                      label: const Text('Leading (Left)'),
                       selected: actionPosition == GlassActionPosition.leading,
                       onSelected: (_) =>
                           onActionPositionChanged(GlassActionPosition.leading),
